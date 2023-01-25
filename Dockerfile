@@ -1,8 +1,17 @@
-FROM openjdk:11-jdk
+# Use an official openjdk image as the base image
+FROM openjdk:11-jdk-slim-buster
 
-COPY target/userlogin-0.0.1-SNAPSHOT.jar /app/api.jar
-COPY src/main/resources/application.properties /app/config/application.properties
+LABEL maintainer = "Apurva Bansode"
 
+# Set the working directory in the container to /app
+WORKDIR /app3
+
+# Copy the JAR file and other resources into the container
+COPY target/userlogin-0.0.1-SNAPSHOT.jar .
+COPY src/main/resources/application.properties .
+
+# Expose the port that the application runs on
 EXPOSE 9003
 
-ENTRYPOINT ["java", "-jar", "-Dspring.config.import=optional:configserver:http://172.174.113.233:8888", "-Dspring.config.name=application", "-Dspring.config.location=file:/app/config/", "/app/api.jar"]
+# Start the application
+CMD ["java", "-jar", "userlogin-0.0.1-SNAPSHOT.jar"]
