@@ -1,15 +1,16 @@
 package com.miracle.login.controller;
 
-import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,10 +19,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.miracle.login.beans.ERole;
@@ -40,6 +41,10 @@ import com.miracle.login.jwt.payload.TokenRefreshRequest;
 import com.miracle.login.jwt.payload.TokenRefreshResponse;
 import com.miracle.login.repository.RoleRepository;
 import com.miracle.login.repository.UserRepository;
+import com.miracle.login.service.UserServiceImpl;
+
+import io.swagger.annotations.ApiParam;
+
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -62,6 +67,9 @@ public class AuthController {
 
 	@Autowired
 	JwtUtils jwtUtils;
+	
+	@Autowired
+	UserServiceImpl userService;
 
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -89,31 +97,31 @@ public class AuthController {
 	public String openSettings() {
 		return "normal/settings";
 	}
-	@PostMapping("/changepassword")
-	public String changepassword(Principal principal, @RequestParam(value = "currentpassword", required=false) String currentpassword, @RequestParam(value="newpassword", required=false) String newpassword, HttpSession session){
-		String email = principal.getName();
-		User loginUser = userRepository.findByEmail(email);
-		boolean match = encoder.matches(currentpassword, loginUser.getPassword());
-		if(match) {
-			loginUser.setPassword(encoder.encode(newpassword));
-			User updatePasswordUser = userRepository.save(loginUser);
-			if(updatePasswordUser!=null) {
-				session.setAttribute("message","password changed");
-			}else {
-				session.setAttribute("message","something went wrong");
-			}
-		}else {
-			session.setAttribute("message","current password incorrect");
-		}
-//		return "redirect:/user/signin";
-		return "password changed successfully";
-
-	}
+//	@PostMapping("/changepassword")
+//	public String changepassword(Locale locale, @RequestParam(value = "currentpassword", required=false) String currentpassword, @RequestParam(value="newpassword", required=false) String newpassword, HttpSession session){
+////		String LoggedInUserUsername = principal.getName();
+////		User loginUser = this.userRepository.findByEmail(email);
+//		User loginUser = UserServiceImpl.findUserByEmail(((User) SecurityContextHolder.getContext().getAuthentication()).getEmail());
+//		boolean match = encoder.matches(currentpassword, loginUser.getPassword());
+//		if(match) {
+//			loginUser.setPassword(encoder.encode(newpassword));
+//			User updatePasswordUser = userRepository.save(loginUser);
+//			if(updatePasswordUser!=null) {
+//				session.setAttribute("message","password changed");
+//			}else {
+//				session.setAttribute("message","something went wrong");
+//			}
+//		}else {
+//			session.setAttribute("message","current password incorrect");
+//		}
+////		return "redirect:/user/signin";
+//		return "password changed successfully";
+//
+//	}
 	
-	@PostMapping("/updatepassword")
-	public ResponseEntity<?> updatepassword(){
-		return null;
-	}
+	
+	
+
 	@PostMapping("/refreshtoken")
 	public ResponseEntity<?> refreshtoken(@Valid @RequestBody TokenRefreshRequest request) {
 		String requestRefreshToken = request.getRefreshToken();
@@ -179,5 +187,23 @@ public class AuthController {
 
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 	}
+	@GetMapping("/roles")
+	public ResponseEntity<List<Role>> getAllRoles(){
+		List<Role> role = userService.getAllRoles();
+		return new ResponseEntity<List<Role>>(role , new HttpHeaders(), HttpStatus.OK);
+	}
+	
+	@GetMapping("/userinfo/{id}")
+	public ResponseEntity<Optional<User>> getUserInfo(@ApiParam(value = "Id", required = true) @PathVariable("id") String id){
+		Optional<User> userinfo = userService.getUserInfo(id);
+		return new ResponseEntity<Optional<User>>(userinfo,new HttpHeaders(), HttpStatus.OK);
+	}
+	
+	@GetMapping("/userslist")
+	public ResponseEntity<List<User>> getAllUsers(){
+		List<User> users = userService.getAllUsers();
+		return new ResponseEntity<List<User>>(users , new HttpHeaders(), HttpStatus.OK);
+	}
+	
 }
 
