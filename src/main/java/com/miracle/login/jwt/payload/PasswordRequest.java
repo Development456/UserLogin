@@ -13,6 +13,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PasswordRequest {
 	private String username;
-	private String currentpassword;
-	private String newpassword;
+	private String currentPassword;
+	private String newPassword;
 }
