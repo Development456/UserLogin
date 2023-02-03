@@ -108,9 +108,9 @@ public class AuthController {
 	public String changepassword(@Valid @RequestBody PasswordRequest passwordrequest, HttpSession session){
 		String username = passwordrequest.getUsername();
 		User loginUser = userService.findByName(username);
-		boolean match = encoder.matches(passwordrequest.getCurrentpassword(), loginUser.getPassword());
+		boolean match = encoder.matches(passwordrequest.getCurrentPassword(), loginUser.getPassword());
 		if(match) {
-			loginUser.setPassword(encoder.encode(passwordrequest.getNewpassword()));
+			loginUser.setPassword(encoder.encode(passwordrequest.getNewPassword()));
 			User updatePasswordUser = userRepository.save(loginUser);
 			if(updatePasswordUser!=null) {
 				session.setAttribute("message","password changed");
