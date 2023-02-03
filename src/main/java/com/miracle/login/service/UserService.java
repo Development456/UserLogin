@@ -43,5 +43,16 @@ public class UserService implements UserServiceImpl{
 	public Optional<User> getUserInfo(String id){
 		return userRepository.findById(id);
 	}
+	@Override
+	public User findByName(String username) {
+		User user= userRepository.findByName(username);
+		return user;
+	}
+
+	@Override
+	public Optional<Role> getAllRolesFromId(String id) {
+		return roleRepository.findByRoleId(id);
+	}
+	
 }
 

@@ -27,7 +27,7 @@ public class SignupRequest {
     private String phone;
     
     @NotBlank
-    @Size(min = 6, max = 40)
+    @Size(min = 8, max = 12)
     private String password;
     
     private String wmsAccountNumber;

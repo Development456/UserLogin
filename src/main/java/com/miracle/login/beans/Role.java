@@ -17,7 +17,7 @@ import lombok.Setter;
 @Document(collection="roles")
 public class Role {
 	@Id
-	private String id;
+	private String roleId;
 	private ERole name;
 	
 }
