@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.miracle.login.UserloginApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.082 s - in com.miracle.login.UserloginApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 12.288 s - in com.miracle.login.UserloginApplicationTests

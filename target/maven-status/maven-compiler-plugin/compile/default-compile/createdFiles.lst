@@ -2,6 +2,7 @@ com\miracle\login\repository\UserRepository.class
 com\miracle\login\jwt\AuthEntryPointJwt.class
 com\miracle\login\jwt\UserDetailsServiceImpl.class
 com\miracle\login\beans\User.class
+META-INF\spring-configuration-metadata.json
 com\miracle\login\jwt\payload\TokenRefreshResponse.class
 com\miracle\login\jwt\payload\JwtResponse.class
 com\miracle\login\jwt\JwtUtils.class
@@ -21,4 +22,5 @@ com\miracle\login\jwt\AuthTokenFilter.class
 com\miracle\login\repository\RefreshTokenRepository.class
 com\miracle\login\controller\AuthController.class
 com\miracle\login\beans\ERole.class
+com\miracle\login\config\ConfigurationDetails.class
 com\miracle\login\UserloginApplication.class
