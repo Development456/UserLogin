@@ -1,11 +1,13 @@
 package com.miracle.login.controller;
 
+import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +23,11 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.miracle.login.beans.ERole;
@@ -36,11 +41,13 @@ import com.miracle.login.jwt.UserDetailsImpl;
 import com.miracle.login.jwt.payload.JwtResponse;
 import com.miracle.login.jwt.payload.LoginRequest;
 import com.miracle.login.jwt.payload.MessageResponse;
+import com.miracle.login.jwt.payload.PasswordRequest;
 import com.miracle.login.jwt.payload.SignupRequest;
 import com.miracle.login.jwt.payload.TokenRefreshRequest;
 import com.miracle.login.jwt.payload.TokenRefreshResponse;
 import com.miracle.login.repository.RoleRepository;
 import com.miracle.login.repository.UserRepository;
+import com.miracle.login.service.UserService;
 import com.miracle.login.service.UserServiceImpl;
 
 import io.swagger.annotations.ApiParam;
@@ -69,7 +76,7 @@ public class AuthController {
 	JwtUtils jwtUtils;
 	
 	@Autowired
-	UserServiceImpl userService;
+	UserService userService;
 
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -97,29 +104,26 @@ public class AuthController {
 	public String openSettings() {
 		return "normal/settings";
 	}
-//	@PostMapping("/changepassword")
-//	public String changepassword(Locale locale, @RequestParam(value = "currentpassword", required=false) String currentpassword, @RequestParam(value="newpassword", required=false) String newpassword, HttpSession session){
-////		String LoggedInUserUsername = principal.getName();
-////		User loginUser = this.userRepository.findByEmail(email);
-//		User loginUser = UserServiceImpl.findUserByEmail(((User) SecurityContextHolder.getContext().getAuthentication()).getEmail());
-//		boolean match = encoder.matches(currentpassword, loginUser.getPassword());
-//		if(match) {
-//			loginUser.setPassword(encoder.encode(newpassword));
-//			User updatePasswordUser = userRepository.save(loginUser);
-//			if(updatePasswordUser!=null) {
-//				session.setAttribute("message","password changed");
-//			}else {
-//				session.setAttribute("message","something went wrong");
-//			}
-//		}else {
-//			session.setAttribute("message","current password incorrect");
-//		}
-////		return "redirect:/user/signin";
-//		return "password changed successfully";
-//
-//	}
-	
-	
+	@PutMapping("/changepassword")
+	public String changepassword(@Valid @RequestBody PasswordRequest passwordrequest, HttpSession session){
+		String username = passwordrequest.getUsername();
+		User loginUser = userService.findByName(username);
+		boolean match = encoder.matches(passwordrequest.getCurrentpassword(), loginUser.getPassword());
+		if(match) {
+			loginUser.setPassword(encoder.encode(passwordrequest.getNewpassword()));
+			User updatePasswordUser = userRepository.save(loginUser);
+			if(updatePasswordUser!=null) {
+				session.setAttribute("message","password changed");
+			}else {
+				session.setAttribute("message","something went wrong");
+			}
+		}else {
+			session.setAttribute("message","current password incorrect");
+		}
+//		return "redirect:/user/signin";
+		return "password changed successfully";
+
+	}
 	
 
 	@PostMapping("/refreshtoken")
@@ -191,6 +195,11 @@ public class AuthController {
 	public ResponseEntity<List<Role>> getAllRoles(){
 		List<Role> role = userService.getAllRoles();
 		return new ResponseEntity<List<Role>>(role , new HttpHeaders(), HttpStatus.OK);
+	}
+	@GetMapping("/roles/{id}")
+	public ResponseEntity<Optional<Role>> getAllRolesFromId(@ApiParam(value = "Id", required = true) @PathVariable("id") String id){
+		Optional<Role> rid = userService.getAllRolesFromId(id);
+		return new ResponseEntity<Optional<Role>>(rid , new HttpHeaders(), HttpStatus.OK);
 	}
 	
 	@GetMapping("/userinfo/{id}")

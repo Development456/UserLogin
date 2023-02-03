@@ -9,4 +9,5 @@ import com.miracle.login.beans.Role;
 
 public interface RoleRepository extends MongoRepository<Role, String> {
 	Optional<Role> findByName(ERole name);
+	Optional<Role> findByRoleId(String id);
 }

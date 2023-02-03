@@ -14,5 +14,9 @@ public interface UserServiceImpl {
 
 	public List<User> getAllUsers();
 
-	public Optional<User> getUserInfo(String id); 
+	public Optional<User> getUserInfo(String id);
+
+	public User findByName(String username);
+
+	public Optional<Role> getAllRolesFromId(String id); 
 }
