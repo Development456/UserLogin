@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,8 +27,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.miracle.login.beans.ERole;
@@ -48,7 +47,6 @@ import com.miracle.login.jwt.payload.TokenRefreshResponse;
 import com.miracle.login.repository.RoleRepository;
 import com.miracle.login.repository.UserRepository;
 import com.miracle.login.service.UserService;
-import com.miracle.login.service.UserServiceImpl;
 
 import io.swagger.annotations.ApiParam;
 
@@ -105,11 +103,11 @@ public class AuthController {
 		return "normal/settings";
 	}
 	@PutMapping("/changepassword")
-	public String changepassword(@Valid @RequestBody PasswordRequest passwordrequest, HttpSession session){
-		String username = passwordrequest.getUsername();
+	public ResponseEntity<?> changepassword(@Valid @RequestBody PasswordRequest passwordrequest, HttpSession session, Principal principal){
+		String username = principal.getName();
 		User loginUser = userService.findByName(username);
 		boolean match = encoder.matches(passwordrequest.getCurrentPassword(), loginUser.getPassword());
-		if(match) {
+		if(match==true) {
 			loginUser.setPassword(encoder.encode(passwordrequest.getNewPassword()));
 			User updatePasswordUser = userRepository.save(loginUser);
 			if(updatePasswordUser!=null) {
@@ -117,11 +115,16 @@ public class AuthController {
 			}else {
 				session.setAttribute("message","something went wrong");
 			}
-		}else {
+			return ResponseEntity.ok(new MessageResponse("Password Changed Successfully!"));
+		
+		} else{
 			session.setAttribute("message","current password incorrect");
+			return ResponseEntity
+					.badRequest()
+					.body(new MessageResponse("Password is incorrect"));
 		}
 //		return "redirect:/user/signin";
-		return "password changed successfully";
+		
 
 	}
 	
@@ -198,8 +201,8 @@ public class AuthController {
 	}
 	@GetMapping("/roles/{id}")
 	public ResponseEntity<Optional<Role>> getAllRolesFromId(@ApiParam(value = "Id", required = true) @PathVariable("id") String id){
-		Optional<Role> rid = userService.getAllRolesFromId(id);
-		return new ResponseEntity<Optional<Role>>(rid , new HttpHeaders(), HttpStatus.OK);
+		Optional<Role> roles = userService.getAllRolesFromId(id);
+		return new ResponseEntity<Optional<Role>>(roles , new HttpHeaders(), HttpStatus.OK);
 	}
 	
 	@GetMapping("/userinfo/{id}")
@@ -207,12 +210,53 @@ public class AuthController {
 		Optional<User> userinfo = userService.getUserInfo(id);
 		return new ResponseEntity<Optional<User>>(userinfo,new HttpHeaders(), HttpStatus.OK);
 	}
-	
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/userslist")
 	public ResponseEntity<List<User>> getAllUsers(){
 		List<User> users = userService.getAllUsers();
 		return new ResponseEntity<List<User>>(users , new HttpHeaders(), HttpStatus.OK);
 	}
+    @PutMapping("/edituser")
+    public ResponseEntity<?> editUser(@RequestBody User users){
+        try {
+            Optional<User> user= userRepository.findById(users.getId());
+           if (users.getName() !=null)
+               user.get().setName(users.getName());
+           if (users.getEmail() !=null)
+        	   user.get().setEmail(users.getEmail());
+           if (users.getPhone() !=null)
+        	   user.get().setPhone(users.getPhone());
+           if (users.getUsername() !=null)
+        	   user.get().setUsername(users.getUsername());
+
+            userRepository.save(user.get());
+            return ResponseEntity.ok(new MessageResponse("Successfully account updated"));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+        }
+
+    }
+
+//
+//    @PostMapping("/delete")
+//    public ResponseEntity<?> delete(@RequestBody User users){
+//        try {
+//            Optional<User> user= userRepository.findById(users.getId());
+//            Optional<Role> roles= roleRepository.findByName(users.getRoles() == ROLE_ADMIN );
+//            if(user.get().getRoles().stream().allMatch(y-> y.getId() ==roles.get().getId())){
+//                return ResponseEntity.ok(new ApiResponse(false,"","Sorry!,you don't have permission to delete this account"));
+//
+//            }else {
+//                user.get().setStatus(1);
+//                userRepository.save(user.get());
+//                return ResponseEntity.ok(new ApiResponse(true,"","Successfully account deleted"));
+//
+//            }
+//        }catch (Exception e){
+//            return ResponseEntity.ok(new ApiResponse(false,"",e.getMessage()));
+//        }
+//
+//    }
 	
 }
 

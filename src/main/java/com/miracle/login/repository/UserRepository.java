@@ -20,6 +20,7 @@ public interface UserRepository extends MongoRepository<User, String> {
 	  
 	  User findByEmail(String email);
 	  
+	  @Query("{id: ?0}")
 	  Optional<User> findById(String id);
 
 }
