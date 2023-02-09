@@ -23,4 +23,8 @@ public interface UserRepository extends MongoRepository<User, String> {
 	  @Query("{id: ?0}")
 	  Optional<User> findById(String id);
 
+	  @Query(value="{id: ?0}", fields= "{roles:1}")
+	  Optional<User> findByRoleId(String id);
+
+	
 }

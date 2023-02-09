@@ -50,8 +50,8 @@ public class UserService implements UserServiceImpl{
 	}
 
 	@Override
-	public Optional<Role> getAllRolesFromId(String id) {
-		return roleRepository.findByRoleId(id);
+	public Optional<User> getAllRolesFromId(String id) {
+		return userRepository.findByRoleId(id);
 	}
 	
 }

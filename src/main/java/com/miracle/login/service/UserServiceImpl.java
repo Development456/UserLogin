@@ -18,5 +18,5 @@ public interface UserServiceImpl {
 
 	public User findByName(String username);
 
-	public Optional<Role> getAllRolesFromId(String id); 
+	public Optional<User> getAllRolesFromId(String id); 
 }
