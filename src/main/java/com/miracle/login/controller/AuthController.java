@@ -200,9 +200,9 @@ public class AuthController {
 		return new ResponseEntity<List<Role>>(role , new HttpHeaders(), HttpStatus.OK);
 	}
 	@GetMapping("/roles/{id}")
-	public ResponseEntity<Optional<Role>> getAllRolesFromId(@ApiParam(value = "Id", required = true) @PathVariable("id") String id){
-		Optional<Role> roles = userService.getAllRolesFromId(id);
-		return new ResponseEntity<Optional<Role>>(roles , new HttpHeaders(), HttpStatus.OK);
+	public ResponseEntity<Optional<User>> getAllRolesFromId(@ApiParam(value = "Id", required = true) @PathVariable("id") String id){
+		Optional<User> roles = userService.getAllRolesFromId(id);
+		return new ResponseEntity<Optional<User>>(roles , new HttpHeaders(), HttpStatus.OK);
 	}
 	
 	@GetMapping("/userinfo/{id}")
