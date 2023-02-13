@@ -8,19 +8,19 @@ node {
         sh 'docker build -t userlogin .'
         sh 'docker image ls'
       }
-       withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'test', usernameVariable: 'jsilaparasetti', passwordVariable: 'password']]) {
-        sh 'docker login -u jsilaparasetti -p $password'
+       withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'test', usernameVariable: 'apurva', passwordVariable: 'password']]) {
+        sh 'docker login -u apurva@09 -p $password'
       }
       stage("Pushing Image to Docker Hub"){
-	sh 'docker tag userlogin jsilaparasetti/userlogin:latest'
-	sh 'docker push jsilaparasetti/userlogin:latest'
+	sh 'docker tag userlogin apurva/userlogin:latest'
+	sh 'docker push apurva/userlogin:latest'
       }
       stage("SSH Into Server") {
        def remote = [:]
-       remote.name = 'CLAIMS-VM'
-       remote.host = '20.163.133.102'
-       remote.user = 'azureuser'
-       remote.password = 'Miracle@1234'
+       remote.name = 'DEV-VM'
+       remote.host = '20.62.171.46'
+       remote.user = 'dev_azureuser'
+       remote.password = 'AHTgxKmRGb05'
        remote.allowAnyHosts = true
      }
      stage("Deploy"){
