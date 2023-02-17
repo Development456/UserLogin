@@ -1,23 +1,16 @@
 package com.miracle.login.beans;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.regex.Pattern;
 
-import javax.validation.constraints.Email;
-
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import javax.validation.constraints.Email;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -54,6 +47,9 @@ public class User {
 	@DBRef
 	private Set<Role> roles = new HashSet<>();
 	
+//	@DBRef
+//	private List<RefreshToken> token = new ArrayList<>();
+	
 	public User(String username, String email, String name, String phone, String password) {
 		    this.username = username;
 		    this.email = email;
@@ -65,12 +61,3 @@ public class User {
 	
 }
 
-//{
-//    "_id" : ObjectId("63a1e35a88a09474ec6c3cf9"),
-//    "username" : "baleksandrov1c",
-//    "password" : "FJMWzZCJnoP",
-//    "name" : "Brina Aleksandrov",
-//    "email" : "baleksandrov1c@yolasite.com",
-//    "phone" : "885-852-2554",
-//    "wms_account_number" : "tz1ZShZs9o4jJXS8VAgy9C7LhVWdkLkDcC2A"
-//}

@@ -1,18 +1,17 @@
-package com.miracle.login.jwt;
-
-import java.time.Instant;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+package com.miracle.login.service;
 
 import com.miracle.login.beans.RefreshToken;
 import com.miracle.login.exception.TokenRefreshException;
 import com.miracle.login.repository.RefreshTokenRepository;
 import com.miracle.login.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
+import java.util.Optional;
+import java.util.UUID;
 
 
 @Service

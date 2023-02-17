@@ -1,19 +1,15 @@
 package com.miracle.login.service;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.miracle.login.beans.Role;
 import com.miracle.login.beans.User;
 import com.miracle.login.repository.RoleRepository;
 import com.miracle.login.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -25,7 +21,8 @@ public class UserService implements UserServiceImpl{
 	 private RoleRepository roleRepository;
 	 
 	 public User findUserByEmail(String email) {
-	        return userRepository.findByEmail(email);
+	       User user= userRepository.findByEmail(email);
+	        return user;
 	 }
 	 
 	@Override
@@ -52,6 +49,11 @@ public class UserService implements UserServiceImpl{
 	@Override
 	public Optional<User> getAllRolesFromId(String id) {
 		return userRepository.findByRoleId(id);
+	}
+
+	@Override
+	public Optional<User> findByResetToken(String token) {
+		return userRepository.findByResetToken(token);	
 	}
 	
 }

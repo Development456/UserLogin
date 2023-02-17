@@ -9,6 +9,8 @@ import com.miracle.login.beans.User;
 public interface UserServiceImpl {
 
 	public User findUserByEmail(String email);
+	  
+	public Optional<User> findByResetToken(String token);
 
 	public List<Role> getAllRoles();
 

@@ -1,0 +1,32 @@
+{
+  "groups": [
+    {
+      "name": "login",
+      "type": "com.miracle.login.config.ConfigurationDetails",
+      "sourceType": "com.miracle.login.config.ConfigurationDetails"
+    }
+  ],
+  "properties": [
+    {
+      "name": "login.database",
+      "type": "java.lang.String",
+      "sourceType": "com.miracle.login.config.ConfigurationDetails"
+    },
+    {
+      "name": "login.host",
+      "type": "java.lang.String",
+      "sourceType": "com.miracle.login.config.ConfigurationDetails"
+    },
+    {
+      "name": "login.port",
+      "type": "java.lang.Integer",
+      "sourceType": "com.miracle.login.config.ConfigurationDetails"
+    },
+    {
+      "name": "login.value",
+      "type": "java.lang.String",
+      "sourceType": "com.miracle.login.config.ConfigurationDetails"
+    }
+  ],
+  "hints": []
+}

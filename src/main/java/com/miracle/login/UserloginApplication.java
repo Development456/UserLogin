@@ -12,16 +12,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class UserloginApplication {
 
 	public static void main(String[] args) {
-		try{
 			SpringApplication.run(UserloginApplication.class, args);
-		}catch (Throwable e) {
-            if(e.getClass().getName().contains("SilentExitException")) {
-            	// skipping for spring known bug https://github.com/spring-projects/spring-boot/issues/3100
-                log.debug("Spring is restarting the main thread - See spring-boot-devtools");
-            } else {
-                throw e;
-            }
-		}
 
 	}
 }

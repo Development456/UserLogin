@@ -1,12 +1,11 @@
 package com.miracle.login.repository;
 
-import java.util.Optional;
-
+import com.miracle.login.beans.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.miracle.login.beans.User;
+import java.util.Optional;
 @Repository
 public interface UserRepository extends MongoRepository<User, String> {
 	  Optional<User> findByUsername(String username);
@@ -18,7 +17,12 @@ public interface UserRepository extends MongoRepository<User, String> {
 
 	  Boolean existsByEmail(String email);
 	  
+	  @Query("{email: ?0}")
 	  User findByEmail(String email);
+	  
+	  @Query("{token: ?0}")
+	  Optional<User> findByResetToken(String token);
+
 	  
 	  @Query("{id: ?0}")
 	  Optional<User> findById(String id);
